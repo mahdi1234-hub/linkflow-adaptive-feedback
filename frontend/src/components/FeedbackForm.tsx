@@ -113,7 +113,7 @@ const FeedbackForm: React.FC<Props> = ({ userId }) => {
           user_id: userId,
           user_type: 'unknown',
           sentiment: sentiment?.sentiment || 'neutral',
-          fields_filled: Object.keys(formData).length,
+          fields_filled: Object.values(formData).filter(v => v.trim() !== '').length,
           responses: formData,
           time_spent: signals.timeOnPage,
         }),
