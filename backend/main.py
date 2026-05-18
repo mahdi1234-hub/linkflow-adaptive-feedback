@@ -86,10 +86,16 @@ async def classify_user(request: ClassifyUserRequest):
     
     config = classify_user_signals(request.signals)
     
-    # Learning logic: if user has submitted feedback before, ask different questions
-    if len(history) > 0:
+    # Learning logic: if user has submitted feedback before or is a frequent visitor, ask different questions
+    user_record = None
+    if request.user_id:
+        # Find user by id in users_db (values)
+        user_record = next((u for u in users_db.values() if u["user_id"] == request.user_id), None)
+
+    if len(history) > 0 or (user_record and user_record.get("visit_count", 0) > 1):
         config["form_version"] = "advanced"
-        config["fields"] = ["technical_ease", "performance_rating", "missing_features", "additional_comments"]
+        config["fields"] = ["performance_rating", "missing_features", "long_term_goals", "referral_likelihood"]
+        config["max_fields"] = 4
     
     return config
 
