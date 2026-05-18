@@ -8,3 +8,6 @@
   ➜  Local:   http://localhost:5173/
   ➜  Network: use --host to expose
 12:04:18 PM [vite] hmr update /src/components/FeedbackForm.tsx, /src/index.css
+12:41:13 PM [vite] hmr update /src/App.tsx, /src/index.css
+12:41:26 PM [vite] hmr update /src/components/FeedbackForm.tsx, /src/index.css
+12:42:14 PM [vite] hmr update /src/App.tsx, /src/index.css
