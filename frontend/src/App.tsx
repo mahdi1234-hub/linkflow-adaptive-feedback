@@ -30,8 +30,8 @@ const navLinks = [
 ];
 
 return (
-<section className="relative w-full min-h-screen sm:h-screen overflow-hidden">
-<BoomerangVideoBg src={BG_VIDEO} className="absolute inset-0 w-full h-full" />
+<section className="relative w-full min-h-screen">
+<BoomerangVideoBg src={BG_VIDEO} className="fixed inset-0 w-full h-full" />
 
 {!user && (
   <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-md p-4">
@@ -151,6 +151,13 @@ Try it Live
 </div>
 {/* Hero copy */}
 <div className="relative z-10 flex flex-col items-center text-center pt-24 sm:pt-28 md:pt-32 px-4 sm:px-6">
+  {user && (
+    <div className="mb-12 w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-6 items-start text-left">
+      <UserProfile user={user} />
+      <FeedbackForm userId={user.user_id} />
+    </div>
+  )}
+
 <h1
 className="font-normal leading-[0.95] text-[#336443] text-[2rem] sm:text-4xl md:text-5xl lg:text-[4.75rem] xl:text-[5.25rem] max-w-5xl"
 style={{ fontFamily: '"Neue Haas Grotesk Display Pro 55 Roman", "Neue Haas Grotesk Text Pro", "Helvetica Neue", Helvetica, Arial, sans-serif', letterSpacing: '-0.035em' }}
@@ -164,14 +171,6 @@ linking
 <p className="mt-6 sm:mt-8 text-[#4b5b47] text-sm sm:text-base md:text-lg leading-relaxed max-w-md px-2">
 Shape scattered signals into meaningful outcomes via AI-driven workflows.
 </p>
-<div className="mt-12 w-full max-w-lg grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
-  {user && (
-    <>
-      <UserProfile user={user} />
-      <FeedbackForm userId={user.user_id} />
-    </>
-  )}
-</div>
 </div>
 {/* Bottom-left CTA block */}
 <div className="absolute left-4 right-4 sm:right-auto sm:left-6 md:left-10 bottom-6 sm:bottom-8 md:bottom-10 z-10 max-w-sm">
