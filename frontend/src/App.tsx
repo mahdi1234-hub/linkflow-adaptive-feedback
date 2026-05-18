@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
-import { LogIn, UserPlus, Play, Sparkles, Menu, X, User as UserIcon } from 'lucide-react';
+import { LogIn, UserPlus, Play, Sparkles, Menu, X, User as UserIcon, MessageSquare } from 'lucide-react';
 import BoomerangVideoBg from './BoomerangVideoBg';
 import FeedbackForm from './components/FeedbackForm';
 import AuthForm from './components/AuthForm';
 import UserProfile from './components/UserProfile';
+import { Sheet } from './components/ui/Sheet';
 
 const BG_VIDEO =
 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260511_131941_d136af49-e243-493a-be14-6ff3f24e09e6.mp4';
@@ -11,6 +12,7 @@ const BG_VIDEO =
 function App() {
 const [menuOpen, setMenuOpen] = useState(false);
 const [user, setUser] = useState<any>(null);
+const [isSheetOpen, setIsSheetOpen] = useState(false);
 
 useEffect(() => {
 if (menuOpen) {
@@ -45,12 +47,6 @@ return (
 LinkFlow<sup className="text-[10px] sm:text-xs font-medium">TM</sup>
 </span>
 </div>
-
-{user && (
-  <div className="hidden lg:flex flex-1 max-w-2xl">
-    <FeedbackForm userId={user.user_id} horizontal />
-  </div>
-)}
 
 <div className="hidden lg:flex items-center gap-1 bg-white/70 backdrop-blur-md rounded-full pl-6 pr-1 py-1 shadow-sm border border-white/60 shrink-0">
 {navLinks.map((link, i) => (
@@ -159,15 +155,29 @@ Try it Live
 {/* Hero copy */}
 <div className="relative z-10 flex flex-col items-center text-center pt-24 sm:pt-28 md:pt-32 px-4 sm:px-6">
   {user && (
-    <div className="mb-12 lg:hidden w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-6 items-start text-left">
-      <UserProfile user={user} />
-      <FeedbackForm userId={user.user_id} />
-    </div>
-  )}
-
-  {user && (
-    <div className="hidden lg:block mb-8">
+    <div className="mb-12 flex flex-col items-center gap-6">
        <UserProfile user={user} />
+       
+       <button 
+        onClick={() => setIsSheetOpen(true)}
+        className="group relative flex items-center gap-3 bg-[#336443] hover:bg-[#1f2a1d] text-white px-8 py-4 rounded-full text-lg font-semibold transition-all duration-300 shadow-xl hover:scale-105 active:scale-95"
+       >
+         <MessageSquare className="w-5 h-5" />
+         Share Your Feedback
+         <div className="absolute -top-1 -right-1 flex h-4 w-4">
+           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#85AB8B] opacity-75"></span>
+           <span className="relative inline-flex rounded-full h-4 w-4 bg-[#85AB8B]"></span>
+         </div>
+       </button>
+
+       <Sheet 
+          isOpen={isSheetOpen} 
+          onClose={() => setIsSheetOpen(false)}
+          title="Adaptive Feedback"
+          description="Help us shape LinkFlow with your insights. The form adapts to your mood in real-time."
+        >
+          <FeedbackForm userId={user.user_id} />
+        </Sheet>
     </div>
   )}
 
