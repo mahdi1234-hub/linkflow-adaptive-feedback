@@ -12,7 +12,7 @@
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "https://your-backend-url.back4app.io/api/$1"
+      "destination": "https://retrocast324--linkflow-backend-asgi-app.modal.run/api/$1"
     },
     {
       "source": "/(.*)",
