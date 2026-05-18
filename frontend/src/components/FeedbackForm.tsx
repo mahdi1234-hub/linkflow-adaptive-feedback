@@ -13,7 +13,11 @@ interface FormState {
   [key: string]: string;
 }
 
-const FeedbackForm: React.FC = () => {
+interface Props {
+  userId: string;
+}
+
+const FeedbackForm: React.FC<Props> = ({ userId }) => {
   const [config, setConfig] = useState<FormConfig | null>(null);
   const [formData, setFormData] = useState<FormState>({});
   const [sentiment, setSentiment] = useState<SentimentResult | null>(null);
@@ -29,7 +33,7 @@ const FeedbackForm: React.FC = () => {
         const response = await fetch('/api/classify-user', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ signals }),
+          body: JSON.stringify({ signals, user_id: userId }),
         });
         const data = await response.json();
         setConfig(data);
@@ -106,6 +110,7 @@ const FeedbackForm: React.FC = () => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          user_id: userId,
           user_type: 'unknown',
           sentiment: sentiment?.sentiment || 'neutral',
           fields_filled: Object.keys(formData).length,
