@@ -122,7 +122,7 @@ const FeedbackForm: React.FC = () => {
     }
   };
 
-  if (!config) return <div className="text-white">Loading form...</div>;
+  if (!config || !config.fields) return <div className="text-white">Loading form...</div>;
   if (submitted) return (
     <div className="bg-white/90 backdrop-blur-md p-8 rounded-2xl shadow-xl max-w-md mx-auto text-center">
         <CheckCircle className="w-16 h-16 text-green-600 mx-auto mb-4" />
