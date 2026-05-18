@@ -169,14 +169,14 @@ const FeedbackForm: React.FC<Props> = ({ userId }) => {
                 type="number"
                 min="1"
                 max="5"
-                required
                 className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-heading-accent outline-none"
+                placeholder="1 to 5"
                 onChange={e => handleInputChange(field, e.target.value)}
               />
             ) : (
               <textarea
-                required
                 className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-heading-accent outline-none min-h-[80px]"
+                placeholder={`Tell us about ${field.replace(/_/g, ' ')}...`}
                 onChange={e => handleInputChange(field, e.target.value)}
               />
             )}
