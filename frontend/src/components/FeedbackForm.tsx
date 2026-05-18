@@ -17,7 +17,11 @@ interface Props {
   userId: string;
 }
 
-const FeedbackForm: React.FC<Props> = ({ userId }) => {
+interface FeedbackFormProps extends Props {
+  horizontal?: boolean;
+}
+
+const FeedbackForm: React.FC<FeedbackFormProps> = ({ userId, horizontal }) => {
   const [config, setConfig] = useState<FormConfig | null>(null);
   const [formData, setFormData] = useState<FormState>({});
   const [sentiment, setSentiment] = useState<SentimentResult | null>(null);
@@ -127,30 +131,33 @@ const FeedbackForm: React.FC<Props> = ({ userId }) => {
     }
   };
 
-  if (!config || !config.fields) return <div className="text-white">Loading form...</div>;
+  if (!config || !config.fields) return <div className="text-[#1f2a1d] text-sm font-medium">Loading form...</div>;
   if (submitted) return (
-    <div className="bg-white/90 backdrop-blur-md p-8 rounded-2xl shadow-xl max-w-md mx-auto text-center">
-        <CheckCircle className="w-16 h-16 text-green-600 mx-auto mb-4" />
-        <h2 className="text-2xl font-bold text-dark-green mb-2">Thank You!</h2>
-        <p className="text-body-text-green">Your feedback helps us improve LinkFlow.</p>
+    <div className={`bg-white/80 backdrop-blur-md rounded-xl border border-white/40 flex items-center gap-3 ${horizontal ? 'px-4 py-2' : 'p-6 text-center flex-col'}`}>
+        <CheckCircle className="w-6 h-6 text-green-600" />
+        <div>
+          <p className="text-sm font-bold text-[#1f2a1d]">Thank You!</p>
+          {!horizontal && <p className="text-xs text-[#4b5b47]">Feedback received.</p>}
+        </div>
     </div>
   );
 
   const fieldsToRender = getDynamicFields();
 
   return (
-    <div className="bg-white/90 backdrop-blur-md p-6 sm:p-8 rounded-2xl shadow-xl max-w-md mx-auto relative overflow-hidden transition-all duration-500">
-      <div className="flex items-center gap-2 text-heading-primary mb-6">
-        <Sparkles className="w-5 h-5" />
-        <h2 className="text-xl font-semibold">Share Your Feedback</h2>
-      </div>
+    <div className={`${horizontal ? 'w-full' : 'bg-white/90 backdrop-blur-md p-6 rounded-2xl shadow-xl max-w-md mx-auto'} relative transition-all duration-500`}>
+      {!horizontal && (
+        <div className="flex items-center gap-2 text-heading-primary mb-6">
+          <Sparkles className="w-5 h-5" />
+          <h2 className="text-xl font-semibold">Share Your Feedback</h2>
+        </div>
+      )}
 
-      {riskScore > 0.7 && (
+      {riskScore > 0.7 && !horizontal && (
         <div className="bg-orange-100 border-l-4 border-orange-500 p-3 mb-4 rounded flex items-start gap-2">
             <AlertCircle className="w-5 h-5 text-orange-600 flex-shrink-0 mt-0.5" />
             <div>
                 <p className="text-sm font-semibold text-orange-800">Just one quick question!</p>
-                <p className="text-xs text-orange-700">Almost done - takes only 10 seconds</p>
                 <div className="w-full bg-orange-200 h-1.5 rounded-full mt-2 overflow-hidden">
                     <div className="bg-orange-500 h-full w-[85%] transition-all duration-1000" />
                 </div>
@@ -158,25 +165,28 @@ const FeedbackForm: React.FC<Props> = ({ userId }) => {
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className={`${horizontal ? 'flex flex-row items-end gap-3' : 'space-y-4'}`}>
         {fieldsToRender.map(field => (
-          <div key={field}>
-            <label className="block text-sm font-medium text-dark-green mb-1 capitalize">
-              {field.replace(/_/g, ' ')}
-            </label>
+          <div key={field} className={horizontal ? 'flex-1' : ''}>
+            {!horizontal && (
+              <label className="block text-sm font-medium text-dark-green mb-1 capitalize">
+                {field.replace(/_/g, ' ')}
+              </label>
+            )}
             {field === 'overall_rating' ? (
               <input
                 type="number"
                 min="1"
                 max="5"
-                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-heading-accent outline-none"
-                placeholder="1 to 5"
+                className={`w-full px-3 py-2 rounded-lg border border-white/60 bg-white/50 backdrop-blur-sm focus:ring-2 focus:ring-heading-accent outline-none text-sm`}
+                placeholder="Rating (1-5)"
                 onChange={e => handleInputChange(field, e.target.value)}
               />
             ) : (
-              <textarea
-                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-heading-accent outline-none min-h-[80px]"
-                placeholder={`Tell us about ${field.replace(/_/g, ' ')}...`}
+              <input
+                type="text"
+                className={`w-full px-3 py-2 rounded-lg border border-white/60 bg-white/50 backdrop-blur-sm focus:ring-2 focus:ring-heading-accent outline-none text-sm`}
+                placeholder={field.replace(/_/g, ' ')}
                 onChange={e => handleInputChange(field, e.target.value)}
               />
             )}
@@ -186,22 +196,22 @@ const FeedbackForm: React.FC<Props> = ({ userId }) => {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full bg-dark-green hover:bg-button-hover text-white font-semibold py-3 rounded-xl transition-colors flex items-center justify-center gap-2"
+          className={`${horizontal ? 'px-4 py-2 h-[38px]' : 'w-full py-3'} bg-[#1f2a1d] hover:bg-[#2a3827] text-white font-semibold rounded-lg transition-colors flex items-center justify-center gap-2 text-sm shrink-0`}
         >
-          {isSubmitting ? 'Sending...' : (
+          {isSubmitting ? '...' : (
             <>
-              Submit <Send className="w-4 h-4" />
+              {horizontal ? 'Send' : 'Submit'} <Send className="w-3 h-3" />
             </>
           )}
         </button>
       </form>
 
-      {sentiment && (
-          <div className={`mt-4 text-xs font-medium px-2 py-1 rounded inline-block ${
+      {sentiment && !horizontal && (
+          <div className={`mt-4 text-[10px] font-medium px-2 py-0.5 rounded inline-block ${
               sentiment.sentiment === 'POSITIVE' ? 'bg-green-100 text-green-800' : 
               sentiment.sentiment === 'NEGATIVE' ? 'bg-red-100 text-red-800' : 'bg-gray-100 text-gray-800'
           }`}>
-              Real-time Analysis: {sentiment.sentiment} ({Math.round(sentiment.score * 100)}%)
+              {sentiment.sentiment} ({Math.round(sentiment.score * 100)}%)
           </div>
       )}
     </div>
