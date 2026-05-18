@@ -39,13 +39,20 @@ return (
   </div>
 )}
 
-<nav className="absolute top-0 left-0 right-0 z-30 flex items-center justify-between px-4 sm:px-6 md:px-10 py-4 sm:py-6">
-<div className="flex items-center gap-2 text-[#2d3a2a]">
+<nav className="absolute top-0 left-0 right-0 z-30 flex items-center justify-between px-4 sm:px-6 md:px-10 py-4 sm:py-6 gap-6">
+<div className="flex items-center gap-2 text-[#2d3a2a] shrink-0">
 <span className="text-lg sm:text-xl md:text-2xl font-semibold tracking-tight">
 LinkFlow<sup className="text-[10px] sm:text-xs font-medium">TM</sup>
 </span>
 </div>
-<div className="hidden lg:flex items-center gap-1 bg-white/70 backdrop-blur-md rounded-full pl-6 pr-1 py-1 shadow-sm border border-white/60">
+
+{user && (
+  <div className="hidden lg:flex flex-1 max-w-2xl">
+    <FeedbackForm userId={user.user_id} horizontal />
+  </div>
+)}
+
+<div className="hidden lg:flex items-center gap-1 bg-white/70 backdrop-blur-md rounded-full pl-6 pr-1 py-1 shadow-sm border border-white/60 shrink-0">
 {navLinks.map((link, i) => (
 <a
 key={link.href}
@@ -61,7 +68,7 @@ i === 0 ? 'font-semibold text-[#1f2a1d]' : 'font-medium text-[#4b5b47] hover:tex
 Try it Live
 </button>
 </div>
-<div className="flex items-center gap-3 sm:gap-6 text-[#2d3a2a]">
+<div className="flex items-center gap-3 sm:gap-6 text-[#2d3a2a] shrink-0">
 {user ? (
   <div className="flex items-center gap-2 bg-white/70 backdrop-blur-md px-4 py-2 rounded-full border border-white/60">
     <UserIcon className="w-4 h-4 text-heading-primary" />
@@ -152,9 +159,15 @@ Try it Live
 {/* Hero copy */}
 <div className="relative z-10 flex flex-col items-center text-center pt-24 sm:pt-28 md:pt-32 px-4 sm:px-6">
   {user && (
-    <div className="mb-12 w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-6 items-start text-left">
+    <div className="mb-12 lg:hidden w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-6 items-start text-left">
       <UserProfile user={user} />
       <FeedbackForm userId={user.user_id} />
+    </div>
+  )}
+
+  {user && (
+    <div className="hidden lg:block mb-8">
+       <UserProfile user={user} />
     </div>
   )}
 
