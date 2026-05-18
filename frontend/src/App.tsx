@@ -1,13 +1,16 @@
 import { useState, useEffect } from 'react';
-import { LogIn, UserPlus, Play, Sparkles, Menu, X } from 'lucide-react';
+import { LogIn, UserPlus, Play, Sparkles, Menu, X, User as UserIcon } from 'lucide-react';
 import BoomerangVideoBg from './BoomerangVideoBg';
 import FeedbackForm from './components/FeedbackForm';
+import AuthForm from './components/AuthForm';
+import UserProfile from './components/UserProfile';
 
 const BG_VIDEO =
 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260511_131941_d136af49-e243-493a-be14-6ff3f24e09e6.mp4';
 
 function App() {
 const [menuOpen, setMenuOpen] = useState(false);
+const [user, setUser] = useState<any>(null);
 
 useEffect(() => {
 if (menuOpen) {
@@ -29,6 +32,13 @@ const navLinks = [
 return (
 <section className="relative w-full min-h-screen sm:h-screen overflow-hidden">
 <BoomerangVideoBg src={BG_VIDEO} className="absolute inset-0 w-full h-full" />
+
+{!user && (
+  <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-md p-4">
+    <AuthForm onAuthSuccess={setUser} />
+  </div>
+)}
+
 <nav className="absolute top-0 left-0 right-0 z-30 flex items-center justify-between px-4 sm:px-6 md:px-10 py-4 sm:py-6">
 <div className="flex items-center gap-2 text-[#2d3a2a]">
 <span className="text-lg sm:text-xl md:text-2xl font-semibold tracking-tight">
@@ -52,14 +62,23 @@ Try it Live
 </button>
 </div>
 <div className="flex items-center gap-3 sm:gap-6 text-[#2d3a2a]">
-<a href="#signup" className="hidden sm:flex items-center gap-2 text-sm font-medium hover:opacity-80 transition-opacity">
-<UserPlus className="w-4 h-4" />
-Sign Me Up!
-</a>
-<a href="#login" className="hidden sm:flex items-center gap-2 text-sm font-medium hover:opacity-80 transition-opacity">
-<LogIn className="w-4 h-4" />
-Enter
-</a>
+{user ? (
+  <div className="flex items-center gap-2 bg-white/70 backdrop-blur-md px-4 py-2 rounded-full border border-white/60">
+    <UserIcon className="w-4 h-4 text-heading-primary" />
+    <span className="text-sm font-semibold">{user.full_name}</span>
+  </div>
+) : (
+  <>
+    <a href="#signup" className="hidden sm:flex items-center gap-2 text-sm font-medium hover:opacity-80 transition-opacity">
+    <UserPlus className="w-4 h-4" />
+    Sign Me Up!
+    </a>
+    <a href="#login" className="hidden sm:flex items-center gap-2 text-sm font-medium hover:opacity-80 transition-opacity">
+    <LogIn className="w-4 h-4" />
+    Enter
+    </a>
+  </>
+)}
 <button
 onClick={() => setMenuOpen((v) => !v)}
 className="lg:hidden relative flex items-center justify-center w-10 h-10 rounded-full bg-white/70 backdrop-blur-md border border-white/60 text-[#1f2a1d] transition-all duration-300 hover:bg-white/90"
@@ -145,8 +164,13 @@ linking
 <p className="mt-6 sm:mt-8 text-[#4b5b47] text-sm sm:text-base md:text-lg leading-relaxed max-w-md px-2">
 Shape scattered signals into meaningful outcomes via AI-driven workflows.
 </p>
-<div className="mt-12 w-full max-w-lg">
-  <FeedbackForm />
+<div className="mt-12 w-full max-w-lg grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+  {user && (
+    <>
+      <UserProfile user={user} />
+      <FeedbackForm userId={user.user_id} />
+    </>
+  )}
 </div>
 </div>
 {/* Bottom-left CTA block */}
